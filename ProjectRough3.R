@@ -46,12 +46,11 @@ ecount(testAlly)
 
 AC <- AC[,c(8:24,1:7,25:39)]
 
-finalGraph1 = make_empty_graph(n=0, directed = FALSE)
+finalAC <- AC[,c(1,10,9,17,18:39)]
 for (i in c(2:8)){
   print(i)
   tempdata <- AC[,c(1,i,18:39)]
   tempdata <- tempdata[complete.cases(tempdata[,1:2]),]
-  tempGraph <- graph_from_data_frame(tempdata, directed = FALSE)
   print(class(tempGraph))
   finalGraph1 <- graph.union(finalGraph1,tempGraph, byname = F)
 }
