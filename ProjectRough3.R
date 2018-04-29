@@ -44,6 +44,9 @@ ecount(testAlly)
 
 #Loop this for all
 
+#Need to Make the final graph
+#What is a good format for the final graph
+
 AC <- AC[,c(8:24,1:7,25:39)]
 
 finalAC <- AC[,c(1,10,9,17,18:39)]
