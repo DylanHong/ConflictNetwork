@@ -87,9 +87,12 @@ for (i in c(11:16)){
   print(nrow(finalAC))
 }
 
+finalAC
+finalGraph <- graph_from_data_frame(finalAC, directed = FALSE)
+vcount(finalGraph)
+ecount(finalGraph)
+
+
 #Now finalAC should be the complete edgelist
 
-#Dynamically naming varaibles in R?
 
-#Create all the necessary graphs with the allies
-#Then merge all the graphs to get master graph
