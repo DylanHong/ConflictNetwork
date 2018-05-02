@@ -30,31 +30,6 @@ ally2 <- c("Ally_2a", "Ally_2b", "Ally_2c", "Ally_2d","Ally_2e", "Ally_2f")
 AC <- AC %>% separate(ASSOC_ACTOR_1, ally1, sep = ";", fill = "right")
 AC <- AC %>% separate(ASSOC_ACTOR_2, ally2, sep = ";", fill = "right")
 
-# smalltest <- data.frame("actor1" = AC$ACTOR1,
-#                         "actor2" = AC$ACTOR2,
-#                         "edge1" = AC$LOCATION,
-#                         "edge2" = AC$YEAR)
-# smalltest <- smalltest[complete.cases(smalltest),]
-# testGraph <- graph_from_data_frame(smalltest, directed = FALSE)
-# 
-# vcount(testGraph)
-# ecount(testGraph)
-# edge_attr_names(testGraph)
-# 
-# 
-# allytest <- data.frame("actor1" = AC$ACTOR1,
-#                        "ally1" = AC$Ally_1a)
-# allytest <- allytest[complete.cases(allytest),]
-# testAlly <- graph_from_data_frame(allytest, directed = FALSE)
-# 
-# vcount(testAlly)
-# ecount(testAlly)
-
-#Loop this for all
-
-#Need to Make the final graph
-#What is a good format for the final graph
-
 AC <- AC[,c(8:24,1:7,25:41)]
 
 finalAC <- AC[,c(1,10,9,17,18:41)]
@@ -87,18 +62,23 @@ for (i in c(11:16)){
   print(nrow(finalAC))
 }
 
+#Now finalAC should be the complete edgelist
 finalAC
 finalGraph <- graph_from_data_frame(finalAC, directed = FALSE)
 vcount(finalGraph)
 ecount(finalGraph)
+edge_attr_names(finalGraph)
+vertex_attr_names(finalGraph)
 
+#Checking to see if the graph was made correctly
 rand1 <- unique(finalAC[["ACTOR1"]])
 rand2 <- unique(finalAC[["ACTOR2"]])
 rand3 <- c(rand1,rand2)
-
 length(unique(rand3))
-length(unique(finalAC[["ACTOR2"]]))
 
-#Now finalAC should be the complete edgelist
+#Number of connected components 
+count_components(finalGraph) 
 
+components(finalGraph)
 
+G2000 <- induced_subgraph(finalGraph, which(E(finalGraph$YEAR == 2000)))
