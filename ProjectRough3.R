@@ -20,7 +20,7 @@ summary(AC)
 AC$EVENT_ID <- seq.int(nrow(AC))
 
 #Gives each relation a positive or negative relationship
-AC$RELATION <- "pos"
+AC$RELATION <- "neg"
 
 #Seperate the allies into multiple columns if there are more than 1
 #NA if there is no allies
@@ -55,57 +55,39 @@ AC <- AC %>% separate(ASSOC_ACTOR_2, ally2, sep = ";", fill = "right")
 #Need to Make the final graph
 #What is a good format for the final graph
 
-AC <- AC[,c(8:24,1:7,25:39)]
+AC <- AC[,c(8:24,1:7,25:41)]
 
-finalAC <- AC[,c(1,10,9,17,18:39)]
+finalAC <- AC[,c(1,10,9,17,18:41)]
 
 #Need complete edge list with the relevant edge attributes
 #What edge attribute are relevant? 
 #For actual conflicts they are all relevant
 #For ally relationships only need to know if positive or negative
 
+#Puts the allys into the main dataframe
+print(nrow(finalAC))
 for (i in c(2:8)){
   print(i)
-  tempdata <- AC[,c(1,i,18:39)]
+  tempdata <- AC[,c(1,i,9,17,18:41)]
   tempdata <- tempdata[complete.cases(tempdata[,1:2]),]
-  print(class(tempGraph))  
-  
+  colnames(tempdata)[2] <- 'ACTOR2'
+  tempdata$RELATION <- "pos"
+  finalAC <- rbind(finalAC,tempdata)
+  print(nrow(finalAC))
 }
 
-
-
-
-
-
-for (i in c(2:8)){
-  print(i)
-  tempdata <- AC[,c(1,i,18:39)]
-  tempdata <- tempdata[complete.cases(tempdata[,1:2]),]
-  print(class(tempGraph))
-  finalGraph1 <- graph.union(finalGraph1,tempGraph, byname = F)
-}
-
-finalGraph2 = make_empty_graph(n=0, directed = FALSE)
 for (i in c(11:16)){
   print(i)
-  tempdata <- AC[,c(10,i,18:39)]
+  tempdata <- AC[,c(10,i,9,17,18:41)]
   tempdata <- tempdata[complete.cases(tempdata[,1:2]),]
-  tempGraph <- graph_from_data_frame(tempdata, directed = FALSE)
-  print(class(tempGraph))
-  finalGraph2 <- graph.union(finalGraph2,tempGraph, byname = F)
+  colnames(tempdata)[1] <- 'ACTOR1'
+  colnames(tempdata)[2] <- 'ACTOR2'
+  tempdata$RELATION <- "pos"
+  finalAC <- rbind(finalAC,tempdata)
+  print(nrow(finalAC))
 }
 
-class(finalGraph1)
-vcount(finalGraph1)
-ecount(finalGraph1)
-class(finalGraph2)
-vcount(finalGraph2)
-ecount(finalGraph2)
-edge_attr_names(finalGraph1)
-vertex_attr_names(finalGraph1)
-
-random <- AC[,c(8:24)]
-
+#Now finalAC should be the complete edgelist
 
 #Dynamically naming varaibles in R?
 
