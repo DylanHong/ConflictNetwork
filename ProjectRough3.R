@@ -92,6 +92,12 @@ finalGraph <- graph_from_data_frame(finalAC, directed = FALSE)
 vcount(finalGraph)
 ecount(finalGraph)
 
+rand1 <- unique(finalAC[["ACTOR1"]])
+rand2 <- unique(finalAC[["ACTOR2"]])
+rand3 <- c(rand1,rand2)
+
+length(unique(rand3))
+length(unique(finalAC[["ACTOR2"]]))
 
 #Now finalAC should be the complete edgelist
 
