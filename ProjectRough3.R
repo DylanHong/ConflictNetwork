@@ -14,6 +14,14 @@ AC <- read_csv("data/ACLED_Africa.csv")
 class(AC)
 summary(AC)
 
+#Add new columns to dataframe
+
+#Gives each event a unique event ID
+AC$EVENT_ID <- seq.int(nrow(AC))
+
+#Gives each relation a positive or negative relationship
+AC$RELATION <- "pos"
+
 #Seperate the allies into multiple columns if there are more than 1
 #NA if there is no allies
 ally1 <- c("Ally_1a", "Ally_1b", "Ally_1c", "Ally_1d","Ally_1e", "Ally_1f",
@@ -22,25 +30,25 @@ ally2 <- c("Ally_2a", "Ally_2b", "Ally_2c", "Ally_2d","Ally_2e", "Ally_2f")
 AC <- AC %>% separate(ASSOC_ACTOR_1, ally1, sep = ";", fill = "right")
 AC <- AC %>% separate(ASSOC_ACTOR_2, ally2, sep = ";", fill = "right")
 
-smalltest <- data.frame("actor1" = AC$ACTOR1,
-                        "actor2" = AC$ACTOR2,
-                        "edge1" = AC$LOCATION,
-                        "edge2" = AC$YEAR)
-smalltest <- smalltest[complete.cases(smalltest),]
-testGraph <- graph_from_data_frame(smalltest, directed = FALSE)
-
-vcount(testGraph)
-ecount(testGraph)
-edge_attr_names(testGraph)
-
-
-allytest <- data.frame("actor1" = AC$ACTOR1,
-                       "ally1" = AC$Ally_1a)
-allytest <- allytest[complete.cases(allytest),]
-testAlly <- graph_from_data_frame(allytest, directed = FALSE)
-
-vcount(testAlly)
-ecount(testAlly)
+# smalltest <- data.frame("actor1" = AC$ACTOR1,
+#                         "actor2" = AC$ACTOR2,
+#                         "edge1" = AC$LOCATION,
+#                         "edge2" = AC$YEAR)
+# smalltest <- smalltest[complete.cases(smalltest),]
+# testGraph <- graph_from_data_frame(smalltest, directed = FALSE)
+# 
+# vcount(testGraph)
+# ecount(testGraph)
+# edge_attr_names(testGraph)
+# 
+# 
+# allytest <- data.frame("actor1" = AC$ACTOR1,
+#                        "ally1" = AC$Ally_1a)
+# allytest <- allytest[complete.cases(allytest),]
+# testAlly <- graph_from_data_frame(allytest, directed = FALSE)
+# 
+# vcount(testAlly)
+# ecount(testAlly)
 
 #Loop this for all
 
@@ -50,6 +58,25 @@ ecount(testAlly)
 AC <- AC[,c(8:24,1:7,25:39)]
 
 finalAC <- AC[,c(1,10,9,17,18:39)]
+
+#Need complete edge list with the relevant edge attributes
+#What edge attribute are relevant? 
+#For actual conflicts they are all relevant
+#For ally relationships only need to know if positive or negative
+
+for (i in c(2:8)){
+  print(i)
+  tempdata <- AC[,c(1,i,18:39)]
+  tempdata <- tempdata[complete.cases(tempdata[,1:2]),]
+  print(class(tempGraph))  
+  
+}
+
+
+
+
+
+
 for (i in c(2:8)){
   print(i)
   tempdata <- AC[,c(1,i,18:39)]
