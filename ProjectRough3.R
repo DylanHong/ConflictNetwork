@@ -17,7 +17,7 @@ summary(AC)
 #Add new columns to dataframe
 
 #Gives each event a unique event ID
-AC$EVENT_ID <- seq.int(nrow(AC))
+#AC$EVENT_ID <- seq.int(nrow(AC))
 
 #Gives each relation a positive or negative relationship
 AC$RELATION <- "neg"
@@ -30,9 +30,11 @@ ally2 <- c("Ally_2a", "Ally_2b", "Ally_2c", "Ally_2d","Ally_2e", "Ally_2f")
 AC <- AC %>% separate(ASSOC_ACTOR_1, ally1, sep = ";", fill = "right")
 AC <- AC %>% separate(ASSOC_ACTOR_2, ally2, sep = ";", fill = "right")
 
-AC <- AC[,c(8:24,1:7,25:41)]
+numcol <- 40
 
-finalAC <- AC[,c(1,10,9,17,18:41)]
+AC <- AC[,c(8:24,1:7,25:numcol)]
+
+finalAC <- AC[,c(1,10,9,17,18:numcol)]
 
 #Need complete edge list with the relevant edge attributes
 #What edge attribute are relevant? 
@@ -43,7 +45,7 @@ finalAC <- AC[,c(1,10,9,17,18:41)]
 print(nrow(finalAC))
 for (i in c(2:8)){
   print(i)
-  tempdata <- AC[,c(1,i,9,17,18:41)]
+  tempdata <- AC[,c(1,i,9,17,18:numcol)]
   tempdata <- tempdata[complete.cases(tempdata[,1:2]),]
   colnames(tempdata)[2] <- 'ACTOR2'
   tempdata$RELATION <- "pos"
@@ -53,7 +55,7 @@ for (i in c(2:8)){
 
 for (i in c(11:16)){
   print(i)
-  tempdata <- AC[,c(10,i,9,17,18:41)]
+  tempdata <- AC[,c(10,i,9,17,18:numcol)]
   tempdata <- tempdata[complete.cases(tempdata[,1:2]),]
   colnames(tempdata)[1] <- 'ACTOR1'
   colnames(tempdata)[2] <- 'ACTOR2'
@@ -62,8 +64,14 @@ for (i in c(11:16)){
   print(nrow(finalAC))
 }
 
+drops <- c("EVENT_DATE","TIME_PRECISION","EVENT_TYPE","REGION","ADMIN1",
+           "ADMIN2","ADMIN3","LATITUDE","LONGITUDE","GEO_PRECISION","SOURCE",
+           "SOURCE_SCALE","NOTES","TIMESTAMP")
+finalAC <- finalAC[ , !(names(finalAC) %in% drops)]
+
+
+
 #Now finalAC should be the complete edgelist
-finalAC
 finalGraph <- graph_from_data_frame(finalAC, directed = FALSE)
 vcount(finalGraph)
 ecount(finalGraph)
@@ -79,6 +87,10 @@ length(unique(rand3))
 #Number of connected components 
 count_components(finalGraph) 
 
-components(finalGraph)
+#components(finalGraph)
 
 G2000 <- induced_subgraph(finalGraph, which(E(finalGraph$YEAR == 2000)))
+
+subgraph1 <- subgraph.edges(finalGraph,1:10,1:10)
+class(subgraph1)
+
