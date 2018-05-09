@@ -30,16 +30,15 @@ ally2 <- c("Ally_2a", "Ally_2b", "Ally_2c", "Ally_2d","Ally_2e", "Ally_2f")
 AC <- AC %>% separate(ASSOC_ACTOR_1, ally1, sep = ";", fill = "right")
 AC <- AC %>% separate(ASSOC_ACTOR_2, ally2, sep = ";", fill = "right")
 
+#Number of Columns
 numcol <- 41
 
+#Rearranging the columns in the dataframe
 AC <- AC[,c(8:24,1:7,25:numcol)]
-
 finalAC <- AC[,c(1,10,9,17,18:numcol)]
 
-#Need complete edge list with the relevant edge attributes
-#What edge attribute are relevant? 
-#For actual conflicts they are all relevant
-#For ally relationships only need to know if positive or negative
+#Removing all the incomplete edge pairs in the data
+finalAC <- finalAC[complete.cases(finalAC[,1:2]),]
 
 #Puts the allys into the main dataframe
 print(nrow(finalAC))
@@ -64,6 +63,7 @@ for (i in c(11:16)){
   print(nrow(finalAC))
 }
 
+#Drop columns that will not be used
 drops <- c("EVENT_DATE","TIME_PRECISION","EVENT_TYPE","REGION","ADMIN1",
            "ADMIN2","ADMIN3","LATITUDE","LONGITUDE","GEO_PRECISION","SOURCE",
            "SOURCE_SCALE","NOTES","TIMESTAMP")
@@ -88,11 +88,12 @@ vertex_attr_names(finalGraph)
 
 #Create graphs of each year
 graphByYear <- list()
-randomInt <- 1
+i <- 1
 for (thisData in dataByYear){
   graphTemp <- graph_from_data_frame(thisData, directed = FALSE)
-  graphByYear[[randomInt]] <- graphTemp
-  randomInt <- randomInt + 1
+  print(vcount(graphTemp))
+  graphByYear[[i]] <- graphTemp
+  i <- i + 1
 }
 
 #Checking to see if the full graph was made correctly
@@ -105,7 +106,7 @@ rm(list = c("rand1","rand2","rand3"))
 
 #Number of connected components 
 count_components(finalGraph) 
-components(finalGraph)
+components(finalGraph)$csize
 
 #Get only the largest connected component
 #All the other connected components have less than 6 vertices
@@ -113,9 +114,35 @@ components <- decompose(finalGraph, min.vertices=6)
 length(components)
 finalGraph <- components[[1]]
 
-#
+#Graph Description for Full Graph
+average.path.length(finalGraph)
+mean(degree(finalGraph))
+diameter(finalGraph, directed=F, weights=NA)
+edge_density(finalGraph, loops=F)
+transitivity(finalGraph, type="global")
 
+#Check which vertex has the highest degree
+V(finalGraph)$name[degree(finalGraph)==max(degree(finalGraph))]
+max(degree(finalGraph))
 
+#Clean the yearly graphs
+i <- 1
+newGraphByYear <- list()
+for (graph in graphByYear){
+  count_components(graph) 
+  #components(graph)$csize
+  components <- decompose(graph, min.vertices=150)
+  print(length(components))
+  newGraphByYear[[i]] <- components[[1]]
+  i <- i + 1
+}
 
+#Check to make sure they are all the largest connencted component
+for (graph in newGraphByYear){
+  print(count_components(graph))
+  print(vcount(graph))
+  print(V(graph)$name[degree(graph)==max(degree(graph))])
+  print(max(degree(graph)))
+}
 
 
