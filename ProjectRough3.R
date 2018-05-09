@@ -1,11 +1,15 @@
 rm(list=ls())
 
+#ERGON Model Data
+
 #Import necessary libraries
 library(readr)
 library(igraph)
 #install.packages("tidyr")
 library(tidyr)
 library(dplyr)
+#install.packages("RSiena)
+#library(RSiena)
 
 #Read in the raw CSV
 AC <- read_csv("data/ACLED_Africa.csv")
@@ -241,6 +245,25 @@ structural_balance <- function(givenGraph){
 #Test the structural balance function on smaller graph
 testGraph <- newGraphByYear[[22]] #2018
 structural_balance(testGraph)
+
+
+######Longitudinal Bullies and Allies#########
+
+#Write the functions to make the relevant matrices
+#Years should be indexed to refer to year
+create_matrices <- function(year1, year2, year3){
+  graph1 <- newGraphByYear[[year1]]
+  graph2 <- newGraphByYear[[year2]]
+  graph3 <- newGraphByYear[[year3]]
+  names1 <- V(graph1)$name
+  names2 <- V(graph2)$name
+  names3 <- V(graph3)$name
+  totalNames <- unique(c(names1,names2,names3))
+  print(length(totalNames))
+  
+}
+
+
 
 #Work on modularity between groups
 #Also to do is code in the inter as vertex attribute
