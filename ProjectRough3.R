@@ -163,17 +163,47 @@ edge_attr(testGraph, "RELATION", index =
 
 structural_balance <- function(givenGraph){
   triads <- triangles(givenGraph)
+  total <- length(triads)
+  threePos <- 0
+  twoPos <- 0
+  onePos <- 0
+  zeroPos <- 0
   for (i in seq(1,(length(triads)-2), by=3)){
-    print(triads[i])
+    print(i)
     one <- edge_attr(givenGraph, "RELATION", index = 
                        get.edge.ids(givenGraph, c(triads[i], triads[i+1]), directed = FALSE))
     two <- edge_attr(givenGraph, "RELATION", index = 
-                       get.edge.ids(givenGraph, c(triads[i], triads[i+1]), directed = FALSE))
+                       get.edge.ids(givenGraph, c(triads[i+1], triads[i+2]), directed = FALSE))
     three <- edge_attr(givenGraph, "RELATION", index = 
-                       get.edge.ids(givenGraph, c(triads[i], triads[i+1]), directed = FALSE))
+                       get.edge.ids(givenGraph, c(triads[i+2], triads[i+3]), directed = FALSE))
     
+    tempSum <- 0
+    for (attr in c(one,two,three)){
+      if(attr == "pos"){
+        tempSum <- tempSum + 1
+      }
+    }
+    
+    if (tempSum == 0){
+      zeroPos <- zeroPos +1
+    }
+    if (tempSum == 1){
+      onePos <- onePos +1
+    }
+    if (tempSum == 2){
+      twoPos <- twoPos +1
+    }
+    if (tempSum == 2){
+      threePos <- threePos +1
+    }
   }
+  print(zeroPos)
+  print(onePos)
+  print(twoPos)
+  print(threePos)
 }
+
+structural_balance(testGraph)
 
 triads <- triangles(finalGraph)
 class(triads)
