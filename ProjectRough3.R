@@ -72,20 +72,46 @@ finalAC <- finalAC[ , !(names(finalAC) %in% drops)]
 #finalAC
 
 #Create a vertex attribute dataframe
-#The intercode can change over time
-#Track the changes of the intercode and put it in
-first <- finalAC[,c(1,3)]
-second <- finalAC[,c(2,4)]
+#Note: The intercode can change over time
+#Query all the vertex attributes and put into dataframe
+first <- finalAC[,c(1,3,8)]
+second <- finalAC[,c(2,4,8)]
 colnames(second)[1] <- 'ACTOR1'
 colnames(second)[2] <- 'INTER1'
 combined <- rbind(first, second)
-print(nrow(combined))
 combined <- unique(combined)
-#combined <- combined[!duplicated(combined), ]
 print(nrow(combined))
 length(unique(combined[["ACTOR1"]]))
 length(unique(combined[["INTER1"]]))
 
+first <- finalAC[,c(1,3)]
+second <- finalAC[,c(2,4)]
+colnames(second)[1] <- 'ACTOR1'
+colnames(second)[2] <- 'INTER1'
+combined_new <- rbind(first, second)
+combined_new <- unique(combined)
+print(nrow(combined))
+length(unique(combined[["ACTOR1"]]))
+length(unique(combined[["INTER1"]]))
+
+testing <- combined_new[combined_new$ACTOR1 == "Rioters (Niger)",]
+
+#Sort the dataframe by date
+orderYear <- combined[order(combined[,"YEAR"]),]
+vattr <- data.frame()
+
+#Get 
+temp <- list()
+for (index in 1:nrow(orderYear)){ 
+  row = orderYear[index, ]
+  # print(index)
+  if ( !(row[["ACTOR1"]] %in% names(temp))) {
+    temp[[row[["ACTOR1"]]]] <- paste0("", row[["INTER1"]])
+  } else if ( !(grepl(row[["INTER1"]], temp[[row[["ACTOR1"]]]] )) ) {
+    temp[[row[["ACTOR1"]]]] <- paste0(temp[[row[["ACTOR1"]]]], row[["INTER1"]])
+    print(temp[[row[["ACTOR1"]]]])
+  }
+} 
 
 
 #Get the dataframe sorted by years
