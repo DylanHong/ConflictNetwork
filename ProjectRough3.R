@@ -17,7 +17,7 @@ summary(AC)
 #Add new columns to dataframe
 
 #Gives each event a unique event ID
-#AC$EVENT_ID <- seq.int(nrow(AC))
+AC$EVENT_ID <- seq.int(nrow(AC))
 
 #Gives each relation a positive or negative relationship
 AC$RELATION <- "neg"
@@ -30,7 +30,7 @@ ally2 <- c("Ally_2a", "Ally_2b", "Ally_2c", "Ally_2d","Ally_2e", "Ally_2f")
 AC <- AC %>% separate(ASSOC_ACTOR_1, ally1, sep = ";", fill = "right")
 AC <- AC %>% separate(ASSOC_ACTOR_2, ally2, sep = ";", fill = "right")
 
-numcol <- 40
+numcol <- 41
 
 AC <- AC[,c(8:24,1:7,25:numcol)]
 
@@ -68,6 +68,15 @@ drops <- c("EVENT_DATE","TIME_PRECISION","EVENT_TYPE","REGION","ADMIN1",
            "ADMIN2","ADMIN3","LATITUDE","LONGITUDE","GEO_PRECISION","SOURCE",
            "SOURCE_SCALE","NOTES","TIMESTAMP")
 finalAC <- finalAC[ , !(names(finalAC) %in% drops)]
+
+#Get the dataframe sorted by years
+dataByYear <- list()
+for (i in c(1997:2018)){
+  yearTemp <- finalAC[finalAC$YEAR == i,]
+  dataByYear[[i-1996]] <- yearTemp
+}
+
+
 
 
 
