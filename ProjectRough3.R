@@ -15,7 +15,6 @@ class(AC)
 summary(AC)
 
 #Add new columns to dataframe
-
 #Gives each event a unique event ID
 AC$EVENT_ID <- seq.int(nrow(AC))
 
@@ -138,6 +137,7 @@ for (graph in graphByYear){
 }
 
 #Check to make sure they are all the largest connencted component
+#Also look at the highest degree actor and the degree of that actor
 for (graph in newGraphByYear){
   print(count_components(graph))
   print(vcount(graph))
@@ -145,22 +145,8 @@ for (graph in newGraphByYear){
   print(max(degree(graph)))
 }
 
-sum(count_triangles(testGraph))
-count_triangles(testGraph)
-triads <- triangles(testGraph)
-
-triads[3]$RELATION
-
-edge_attr(testGraph, RELATION, index = E(triads[1], triads[2]))
-
-E(testGraph)$RELATION
-
-edgeHere <- get.edge.ids(testGraph, c(triads[1], triads[2]), directed = FALSE, error = FALSE, multi = FALSE)
-
-
-edge_attr(testGraph, "RELATION", index = 
-            get.edge.ids(testGraph, c(triads[1], triads[2]), directed = FALSE))
-
+#Function that analyzes triads for structural balance
+#Input: graph
 structural_balance <- function(givenGraph){
   triads <- triangles(givenGraph)
   total <- length(triads)
@@ -169,13 +155,13 @@ structural_balance <- function(givenGraph){
   onePos <- 0
   zeroPos <- 0
   for (i in seq(1,(length(triads)-2), by=3)){
-    print(i)
+    #print(i)
     one <- edge_attr(givenGraph, "RELATION", index = 
                        get.edge.ids(givenGraph, c(triads[i], triads[i+1]), directed = FALSE))
     two <- edge_attr(givenGraph, "RELATION", index = 
                        get.edge.ids(givenGraph, c(triads[i+1], triads[i+2]), directed = FALSE))
     three <- edge_attr(givenGraph, "RELATION", index = 
-                       get.edge.ids(givenGraph, c(triads[i+2], triads[i+3]), directed = FALSE))
+                       get.edge.ids(givenGraph, c(triads[i], triads[i+2]), directed = FALSE))
     
     tempSum <- 0
     for (attr in c(one,two,three)){
@@ -193,33 +179,32 @@ structural_balance <- function(givenGraph){
     if (tempSum == 2){
       twoPos <- twoPos +1
     }
-    if (tempSum == 2){
+    if (tempSum == 3){
       threePos <- threePos +1
     }
   }
-  print(zeroPos)
-  print(onePos)
-  print(twoPos)
-  print(threePos)
+  print(paste("The total number of triads is", total/3, "There are", zeroPos,
+              "triads with all negative,", onePos, "with one positive,", twoPos,
+              "with two positive, and", threePos, 
+              "with three positive. The percent of structurally balanced triads is", 
+              (total-twoPos)/total))
+  # print(zeroPos)
+  # print(onePos)
+  # print(twoPos)
+  # print(threePos)
+  # print(total)
 }
 
+#Test the structural balance function on smaller graph
+testGraph <- newGraphByYear[[22]] #2018
 structural_balance(testGraph)
 
-triads <- triangles(finalGraph)
-class(triads)
-cliques(finalGraph,min=3,max=3)
+#Work on modularity between groups
+#Also to do is code in the inter as vertex attribute
 
-
-testGraph <- newGraphByYear[[22]]
-
-constraint(testGraph)
-
-
-
-structural.balance(testGraph)
 
 #Ideas*********************************
 
 #Look at modularity between different types of groups
-#Structural Balane
 #Burts constraint measure
+#constraint(testGraph)
