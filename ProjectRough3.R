@@ -69,6 +69,9 @@ drops <- c("EVENT_DATE","TIME_PRECISION","EVENT_TYPE","REGION","ADMIN1",
            "SOURCE_SCALE","NOTES","TIMESTAMP")
 finalAC <- finalAC[ , !(names(finalAC) %in% drops)]
 
+#Now finalAC should be the complete edgelist
+#finalAC
+
 #Get the dataframe sorted by years
 dataByYear <- list()
 for (i in c(1997:2018)){
@@ -76,30 +79,43 @@ for (i in c(1997:2018)){
   dataByYear[[i-1996]] <- yearTemp
 }
 
-
-
-
-
-#Now finalAC should be the complete edgelist
+#Create a graph of all years
 finalGraph <- graph_from_data_frame(finalAC, directed = FALSE)
 vcount(finalGraph)
 ecount(finalGraph)
 edge_attr_names(finalGraph)
 vertex_attr_names(finalGraph)
 
-#Checking to see if the graph was made correctly
+#Create graphs of each year
+graphByYear <- list()
+randomInt <- 1
+for (thisData in dataByYear){
+  graphTemp <- graph_from_data_frame(thisData, directed = FALSE)
+  graphByYear[[randomInt]] <- graphTemp
+  randomInt <- randomInt + 1
+}
+
+#Checking to see if the full graph was made correctly
 rand1 <- unique(finalAC[["ACTOR1"]])
 rand2 <- unique(finalAC[["ACTOR2"]])
 rand3 <- c(rand1,rand2)
 length(unique(rand3))
+vcount(finalGraph)
+rm(list = c("rand1","rand2","rand3"))
 
 #Number of connected components 
 count_components(finalGraph) 
+components(finalGraph)
 
-#components(finalGraph)
+#Get only the largest connected component
+#All the other connected components have less than 6 vertices
+components <- decompose(finalGraph, min.vertices=6)
+length(components)
+finalGraph <- components[[1]]
 
-G2000 <- induced_subgraph(finalGraph, which(E(finalGraph$YEAR == 2000)))
+#
 
-subgraph1 <- subgraph.edges(finalGraph,1:10,1:10)
-class(subgraph1)
+
+
+
 
