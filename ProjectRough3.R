@@ -145,4 +145,51 @@ for (graph in newGraphByYear){
   print(max(degree(graph)))
 }
 
+sum(count_triangles(testGraph))
+count_triangles(testGraph)
+triads <- triangles(testGraph)
 
+triads[3]$RELATION
+
+edge_attr(testGraph, RELATION, index = E(triads[1], triads[2]))
+
+E(testGraph)$RELATION
+
+edgeHere <- get.edge.ids(testGraph, c(triads[1], triads[2]), directed = FALSE, error = FALSE, multi = FALSE)
+
+
+edge_attr(testGraph, "RELATION", index = 
+            get.edge.ids(testGraph, c(triads[1], triads[2]), directed = FALSE))
+
+structural_balance <- function(givenGraph){
+  triads <- triangles(givenGraph)
+  for (i in seq(1,(length(triads)-2), by=3)){
+    print(triads[i])
+    one <- edge_attr(givenGraph, "RELATION", index = 
+                       get.edge.ids(givenGraph, c(triads[i], triads[i+1]), directed = FALSE))
+    two <- edge_attr(givenGraph, "RELATION", index = 
+                       get.edge.ids(givenGraph, c(triads[i], triads[i+1]), directed = FALSE))
+    three <- edge_attr(givenGraph, "RELATION", index = 
+                       get.edge.ids(givenGraph, c(triads[i], triads[i+1]), directed = FALSE))
+    
+  }
+}
+
+triads <- triangles(finalGraph)
+class(triads)
+cliques(finalGraph,min=3,max=3)
+
+
+testGraph <- newGraphByYear[[22]]
+
+constraint(testGraph)
+
+
+
+structural.balance(testGraph)
+
+#Ideas*********************************
+
+#Look at modularity between different types of groups
+#Structural Balane
+#Burts constraint measure
