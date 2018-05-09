@@ -71,6 +71,23 @@ finalAC <- finalAC[ , !(names(finalAC) %in% drops)]
 #Now finalAC should be the complete edgelist
 #finalAC
 
+#Create a vertex attribute dataframe
+#The intercode can change over time
+#Track the changes of the intercode and put it in
+first <- finalAC[,c(1,3)]
+second <- finalAC[,c(2,4)]
+colnames(second)[1] <- 'ACTOR1'
+colnames(second)[2] <- 'INTER1'
+combined <- rbind(first, second)
+print(nrow(combined))
+combined <- unique(combined)
+#combined <- combined[!duplicated(combined), ]
+print(nrow(combined))
+length(unique(combined[["ACTOR1"]]))
+length(unique(combined[["INTER1"]]))
+
+
+
 #Get the dataframe sorted by years
 dataByYear <- list()
 for (i in c(1997:2018)){
