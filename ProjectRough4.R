@@ -415,9 +415,9 @@ create_matrices_2(1,2)
 create_matrices_3(1,2,3)
 create_matrices_4(1,2,3,4)
 
+
 #Work on modularity between groups
 #Also to do is code in the inter as vertex attribute
-
 
 #Ideas*********************************
 
