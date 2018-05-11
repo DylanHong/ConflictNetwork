@@ -208,7 +208,7 @@ structural_balance <- function(givenGraph){
     two <- edge_attr(givenGraph, "RELATION", index = 
                        get.edge.ids(givenGraph, c(triads[i+1], triads[i+2]), directed = FALSE))
     three <- edge_attr(givenGraph, "RELATION", index = 
-                       get.edge.ids(givenGraph, c(triads[i], triads[i+2]), directed = FALSE))
+                         get.edge.ids(givenGraph, c(triads[i], triads[i+2]), directed = FALSE))
     
     tempSum <- 0
     for (attr in c(one,two,three)){
@@ -247,24 +247,24 @@ testGraph <- newGraphByYear[[22]] #2018
 structural_balance(testGraph)
 
 
-######Longitudinal Bullies and Allies#########
+############Longitudinal Bullies and Allies##############
 
 #Write the functions to make the relevant matrices
 #Years should be indexed to refer to year
-create_matrices <- function(year1, year2, year3){
-  years <- c(year1,year2,year3)
+create_matrices_2 <- function(year1, year2){
+  years <- c(year1,year2)
   
   graph1 <- newGraphByYear[[year1]]
   graph2 <- newGraphByYear[[year2]]
-  graph3 <- newGraphByYear[[year3]]
-  
-  graphs <- list(graph1,graph2,graph3)
+
+  graphs <- list(graph1,graph2)
   
   names1 <- V(graph1)$name
   names2 <- V(graph2)$name
-  names3 <- V(graph3)$name
   
-  totalNames <- unique(c(names1,names2,names3))
+  names <- list(names1,names2)
+  
+  totalNames <- unique(c(names1,names2))
   print(length(totalNames))
   
   #Loop through and populate the matrix
@@ -278,17 +278,20 @@ create_matrices <- function(year1, year2, year3){
     curGraph <- graphs[[index]]
     
     for (i in c(1:length(totalNames))){
+      print(i)
       for (j in c(1:length(totalNames))){
         xaxis <- totalNames[[i]]
         yaxis <- totalNames[[j]]
-        if(are_adjacent(curGraph,xaxis,yaxis)){
-          edgeID <- get.edge.ids(curGraph, c(xaxis,yaxis), directed = FALSE)
-          rel <- edgeID$RELATION
-          if(rel == "pos"){
-            adjMatrix[i,j] == 1
-          }
-          else{
-            adjMatrix[i,j] == -1
+        if(xaxis %in% names[[index]] && yaxis %in% names[[index]]){
+          if(are_adjacent(curGraph,xaxis,yaxis)){
+            edgeID <- get.edge.ids(curGraph, c(xaxis,yaxis), directed = FALSE)
+            rel <- edge_attr(curGraph, "RELATION", index = edgeID)
+            if(rel == "pos"){
+              adjMatrix[i,j] <- 1
+            }
+            else{
+              adjMatrix[i,j] <- -1
+            }
           }
         }
       }
@@ -298,25 +301,22 @@ create_matrices <- function(year1, year2, year3){
   }
 }
 
-create_matrices(1,2,3)
-
-
-######Longitudinal Bullies and Allies#########
-
 #Write the functions to make the relevant matrices
 #Years should be indexed to refer to year
-create_matrices <- function(year1, year2, year3){
-  years <- c(1,2,3)
+create_matrices_3 <- function(year1, year2, year3){
+  years <- c(year1,year2,year3)
   
-  graph1 <- newGraphByYear[[1]]
-  graph2 <- newGraphByYear[[2]]
-  graph3 <- newGraphByYear[[3]]
+  graph1 <- newGraphByYear[[year1]]
+  graph2 <- newGraphByYear[[year2]]
+  graph3 <- newGraphByYear[[year3]]
   
   graphs <- list(graph1,graph2,graph3)
   
   names1 <- V(graph1)$name
   names2 <- V(graph2)$name
   names3 <- V(graph3)$name
+  
+  names <- list(names1,names2,names3)
   
   totalNames <- unique(c(names1,names2,names3))
   print(length(totalNames))
@@ -334,17 +334,18 @@ create_matrices <- function(year1, year2, year3){
     for (i in c(1:length(totalNames))){
       print(i)
       for (j in c(1:length(totalNames))){
-        print(j)
         xaxis <- totalNames[[i]]
         yaxis <- totalNames[[j]]
-        if(are_adjacent(curGraph,xaxis,yaxis)){
-          edgeID <- get.edge.ids(curGraph, c(xaxis,yaxis), directed = FALSE)
-          rel <- edgeID$RELATION
-          if(rel == "pos"){
-            adjMatrix[i,j] == 1
-          }
-          else{
-            adjMatrix[i,j] == -1
+        if(xaxis %in% names[[index]] && yaxis %in% names[[index]]){
+          if(are_adjacent(curGraph,xaxis,yaxis)){
+            edgeID <- get.edge.ids(curGraph, c(xaxis,yaxis), directed = FALSE)
+            rel <- edge_attr(curGraph, "RELATION", index = edgeID)
+            if(rel == "pos"){
+              adjMatrix[i,j] <- 1
+            }
+            else{
+              adjMatrix[i,j] <- -1
+            }
           }
         }
       }
@@ -354,7 +355,65 @@ create_matrices <- function(year1, year2, year3){
   }
 }
 
-create_matrices(1,2,3)
+#Write the functions to make the relevant matrices
+#Years should be indexed to refer to year
+create_matrices_4 <- function(year1, year2, year3, year4){
+  years <- c(year1,year2,year3,year4)
+  
+  graph1 <- newGraphByYear[[year1]]
+  graph2 <- newGraphByYear[[year2]]
+  graph3 <- newGraphByYear[[year3]]
+  graph4 <- newGraphByYear[[year4]]
+  
+  graphs <- list(graph1,graph2,graph3,graph4)
+  
+  names1 <- V(graph1)$name
+  names2 <- V(graph2)$name
+  names3 <- V(graph3)$name
+  names4 <- V(graph4)$name
+  
+  names <- list(names1,names2,names3,name4)
+  
+  totalNames <- unique(c(names1,names2,names3,names4))
+  print(length(totalNames))
+  
+  #Loop through and populate the matrix
+  #Returns of list of combined matrices
+  adjMatrixList <- list()
+  index <- 1
+  for(year in years){
+    adjMatrix <- matrix(data = 0, nrow = length(totalNames), ncol = length(totalNames))
+    rownames(adjMatrix) <- totalNames
+    colnames(adjMatrix) <- totalNames
+    curGraph <- graphs[[index]]
+    
+    for (i in c(1:length(totalNames))){
+      print(i)
+      for (j in c(1:length(totalNames))){
+        xaxis <- totalNames[[i]]
+        yaxis <- totalNames[[j]]
+        if(xaxis %in% names[[index]] && yaxis %in% names[[index]]){
+          if(are_adjacent(curGraph,xaxis,yaxis)){
+            edgeID <- get.edge.ids(curGraph, c(xaxis,yaxis), directed = FALSE)
+            rel <- edge_attr(curGraph, "RELATION", index = edgeID)
+            if(rel == "pos"){
+              adjMatrix[i,j] <- 1
+            }
+            else{
+              adjMatrix[i,j] <- -1
+            }
+          }
+        }
+      }
+    }
+    adjMatrixList[[index]] <- adjMatrix
+    index <- index + 1
+  }
+}
+
+create_matrices_2(1,2)
+create_matrices_3(1,2,3)
+create_matrices_4(1,2,3,4)
 
 #Work on modularity between groups
 #Also to do is code in the inter as vertex attribute
