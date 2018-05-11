@@ -261,6 +261,19 @@ create_matrices <- function(year1, year2, year3){
   totalNames <- unique(c(names1,names2,names3))
   print(length(totalNames))
   
+  adjMatrix <- matrix(data = 0, nrow = totalNames, ncol = totalNames)
+  
+  rownames(adjMatrix) <- totalNames
+  colnames(adjMatrix) <- totalNames
+
+  #Loop through and populate the matrix
+  for (i in c(1:length(totalNames))){
+    for (j in c(1:length(totalNames))){
+      
+      
+      
+    }
+  }
 }
 
 
