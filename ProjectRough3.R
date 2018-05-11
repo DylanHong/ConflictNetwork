@@ -252,6 +252,7 @@ structural_balance(testGraph)
 #Write the functions to make the relevant matrices
 #Years should be indexed to refer to year
 create_matrices <- function(year1, year2, year3){
+  years <- c(year1,year2,year3)
   graph1 <- newGraphByYear[[year1]]
   graph2 <- newGraphByYear[[year2]]
   graph3 <- newGraphByYear[[year3]]
@@ -267,14 +268,20 @@ create_matrices <- function(year1, year2, year3){
   colnames(adjMatrix) <- totalNames
 
   #Loop through and populate the matrix
-  for (i in c(1:length(totalNames))){
-    for (j in c(1:length(totalNames))){
-      
-      
-      
+  for(year in years){
+    
+    for (i in c(1:length(totalNames))){
+      for (j in c(1:length(totalNames))){
+        if(graph1){
+          
+        }
+        
+        
+      }
     }
   }
 }
+
 
 
 
