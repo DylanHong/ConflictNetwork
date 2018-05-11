@@ -299,6 +299,7 @@ create_matrices_2 <- function(year1, year2){
     adjMatrixList[[index]] <- adjMatrix
     index <- index + 1
   }
+  return(adjMatrixList)
 }
 
 #Write the functions to make the relevant matrices
@@ -353,6 +354,7 @@ create_matrices_3 <- function(year1, year2, year3){
     adjMatrixList[[index]] <- adjMatrix
     index <- index + 1
   }
+  return(adjMatrixList)
 }
 
 #Write the functions to make the relevant matrices
@@ -409,11 +411,12 @@ create_matrices_4 <- function(year1, year2, year3, year4){
     adjMatrixList[[index]] <- adjMatrix
     index <- index + 1
   }
+  return(adjMatrixList)
 }
 
-create_matrices_2(1,2)
-create_matrices_3(1,2,3)
-create_matrices_4(1,2,3,4)
+list2 <- create_matrices_2(1,2)
+list3 <- create_matrices_3(1,2,3)
+list4 <- create_matrices_4(1,2,3,4)
 
 
 #Work on modularity between groups
