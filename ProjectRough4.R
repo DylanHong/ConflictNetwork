@@ -77,6 +77,7 @@ finalAC <- finalAC[ , !(names(finalAC) %in% drops)]
 #Create a vertex attribute dataframe
 #Note: The intercode can change over time
 #Query all the vertex attributes and put into dataframe
+#Difficult to do - save to do later if
 first <- finalAC[,c(1,3,8)]
 second <- finalAC[,c(2,4,8)]
 colnames(second)[1] <- 'ACTOR1'
@@ -87,34 +88,24 @@ print(nrow(combined))
 length(unique(combined[["ACTOR1"]]))
 length(unique(combined[["INTER1"]]))
 
-first <- finalAC[,c(1,3)]
-second <- finalAC[,c(2,4)]
-colnames(second)[1] <- 'ACTOR1'
-colnames(second)[2] <- 'INTER1'
-combined_new <- rbind(first, second)
-combined_new <- unique(combined)
-print(nrow(combined))
-length(unique(combined[["ACTOR1"]]))
-length(unique(combined[["INTER1"]]))
-
-testing <- combined_new[combined_new$ACTOR1 == "Rioters (Niger)",]
+#testing <- combined_new[combined_new$ACTOR1 == "Rioters (Niger)",]
 
 #Sort the dataframe by date
-orderYear <- combined[order(combined[,"YEAR"]),]
+orderYear <- combined[order(combined$YEAR),]
 vattr <- data.frame()
 
-#Get 
-temp <- list()
-for (index in 1:nrow(orderYear)){ 
-  row = orderYear[index, ]
-  # print(index)
-  if ( !(row[["ACTOR1"]] %in% names(temp))) {
-    temp[[row[["ACTOR1"]]]] <- paste0("", row[["INTER1"]])
-  } else if ( !(grepl(row[["INTER1"]], temp[[row[["ACTOR1"]]]] )) ) {
-    temp[[row[["ACTOR1"]]]] <- paste0(temp[[row[["ACTOR1"]]]], row[["INTER1"]])
-    print(temp[[row[["ACTOR1"]]]])
-  }
-} 
+#Get the changing intercodes for each actor
+# temp <- list()
+# for (index in 1:nrow(orderYear)){ 
+#   row = orderYear[index, ]
+#   # print(index)
+#   if ( !(row[["ACTOR1"]] %in% names(temp))) {
+#     temp[[row[["ACTOR1"]]]] <- paste0("", row[["INTER1"]])
+#   } else if ( !(grepl(row[["INTER1"]], temp[[row[["ACTOR1"]]]] )) ) {
+#     temp[[row[["ACTOR1"]]]] <- paste0(temp[[row[["ACTOR1"]]]], row[["INTER1"]])
+#     print(temp[[row[["ACTOR1"]]]])
+#   }
+# } 
 
 
 #Get the dataframe sorted by years
@@ -413,10 +404,12 @@ create_matrices_4 <- function(year1, year2, year3, year4){
   return(adjMatrixList)
 }
 
-list2 <- create_matrices_2(1,2)
-list3 <- create_matrices_3(1,2,3)
-list4 <- create_matrices_4(1,2,3,4)
+#Estimated run time little over 1 minute for two years
+#list2 <- create_matrices_2(1,2)
+#list3 <- create_matrices_3(1,2,3)
+#list4 <- create_matrices_4(1,2,3,4)
 
+#Code for basic longitudinal analysis
 longitudinal_analysis <- function(m1, m2){
   
 }
