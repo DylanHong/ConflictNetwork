@@ -404,13 +404,18 @@ create_matrices_4 <- function(year1, year2, year3, year4){
   return(adjMatrixList)
 }
 
-#Estimated run time little over 1 minute for two years
+#Estimated run time: 2 minute per year
 #list2 <- create_matrices_2(1,2)
 #list3 <- create_matrices_3(1,2,3)
 #list4 <- create_matrices_4(1,2,3,4)
 
 #Code for basic longitudinal analysis
+#
 longitudinal_analysis <- function(m1, m2){
+  #Make Graph for each time
+  #Need a scoring method for each tie
+  #Prediction for the next tie
+  #Regression based off of what variables?
   
 }
 
