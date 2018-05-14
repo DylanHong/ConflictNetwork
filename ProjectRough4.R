@@ -1,7 +1,5 @@
 rm(list=ls())
 
-#ERGON Model Data
-
 #Import necessary libraries
 library(readr)
 library(igraph)
@@ -9,7 +7,8 @@ library(igraph)
 library(tidyr)
 library(dplyr)
 #install.packages("RSiena)
-#library(RSiena)
+library(RSiena)
+
 
 #Read in the raw CSV
 AC <- read_csv("data/ACLED_Africa.csv")
@@ -276,9 +275,9 @@ create_matrices_2 <- function(year1, year2){
     rownames(adjMatrix) <- totalNames
     colnames(adjMatrix) <- totalNames
     curGraph <- graphs[[index]]
-    
+    print(index)
     for (i in c(1:length(totalNames))){
-      print(i)
+      #print(i)
       for (j in c(1:length(totalNames))){
         xaxis <- totalNames[[i]]
         yaxis <- totalNames[[j]]
@@ -331,9 +330,9 @@ create_matrices_3 <- function(year1, year2, year3){
     rownames(adjMatrix) <- totalNames
     colnames(adjMatrix) <- totalNames
     curGraph <- graphs[[index]]
-    
+    print(index)
     for (i in c(1:length(totalNames))){
-      print(i)
+      #print(i)
       for (j in c(1:length(totalNames))){
         xaxis <- totalNames[[i]]
         yaxis <- totalNames[[j]]
@@ -388,9 +387,9 @@ create_matrices_4 <- function(year1, year2, year3, year4){
     rownames(adjMatrix) <- totalNames
     colnames(adjMatrix) <- totalNames
     curGraph <- graphs[[index]]
-    
+    print(index)
     for (i in c(1:length(totalNames))){
-      print(i)
+      #print(i)
       for (j in c(1:length(totalNames))){
         xaxis <- totalNames[[i]]
         yaxis <- totalNames[[j]]
@@ -418,9 +417,12 @@ list2 <- create_matrices_2(1,2)
 list3 <- create_matrices_3(1,2,3)
 list4 <- create_matrices_4(1,2,3,4)
 
+longitudinal_analysis <- function(m1, m2){
+  
+}
 
-#Work on modularity between groups
-#Also to do is code in the inter as vertex attribute
+#Now that matrices are completed need to implement
+#Get function from authors
 
 #Ideas*********************************
 
