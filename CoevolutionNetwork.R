@@ -153,13 +153,14 @@ create_matrices_new <- function(df,y1,y2,y3,y4){
   rand <- list()
   rand[[1]] <- allyMatrixList
   rand[[2]] <- conflictMatrixList
+  rand[[3]] <- length(namesList)
   return(rand)
 }
 
-godList <- create_matrices_new(df,2000,2004,2008,2012)
+masterList <- create_matrices_new(df,1997,1998,1999,2000)
 
-masterAlly <- godList[[1]]
-masterConflict <- godList[[2]]
+masterAlly <- masterList[[1]]
+masterConflict <- masterList[[2]]
 
 allyt1 <- masterAlly[[1]]
 allyt2 <- masterAlly[[2]]
@@ -181,12 +182,10 @@ conflictt4 <- masterConflict[[4]]
 # there is evidence for reciprocity, but the parameter estimate
 # is not very well determined by the data.)
 
-allySiena <- sienaDependent(
-  array(c(allyt1, allyt2, allyt3, allyt4),
-        dim=c(1921, 1921, 4)))
-conflictSiena  <- sienaDependent(
-  array(c(conflictt1 ,conflictt2, conflictt3, conflictt4),
-        dim=c(1921, 1921, 4)))
+allySiena <- sienaDependent(array(c(allyt1, allyt2, allyt3, allyt4),
+        dim=c(masterList[[3]], masterList[[3]], 4)))
+conflictSiena  <- sienaDependent(array(c(conflictt1 ,conflictt2, conflictt3, conflictt4),
+        dim=c(masterList[[3]], masterList[[3]], 4)))
 
 # Attributes:
 # sex          <- coCovar(vdb.attr[,1])
@@ -219,7 +218,7 @@ myCoEvAlgorithm <- sienaAlgorithmCreate(projname = 'PleaseForTheLoveOfGodWork', 
                                         n3 = 300)
 GroupsModel <- sienaModelCreate(projname = 'PleaseForTheLoveOfGodWork')
 modelTEST <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvolutionEff,
-                     useCluster=TRUE, nbrNodes=3)
+                     useCluster=TRUE, nbrNodes=6)
 summary(modelTEST)
 
 modelTEST2 <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvolutionEff, 
