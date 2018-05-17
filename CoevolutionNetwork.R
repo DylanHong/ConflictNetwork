@@ -200,19 +200,23 @@ myCoEvolutionEff <- getEffects(vdb.ordered2345)
 
 # network dynamic (inPopSqrt)
 myCoEvolutionEff <- includeEffects(myCoEvolutionEff, transTrip,transTies, cycle3) 
-#myCoEvolutionEff <- includeEffects(myCoEvolutionEff, name = "allySiena", egoX, altX, simX,
-                                   interaction1="sex" )
+#myCoEvolutionEff <- includeEffects(myCoEvolutionEff, name = "allySiena", egoX, altX, simX, interaction1="sex" )
 
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", from, interaction1 = "conflictSiena" )
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", to, interaction1 = "conflictSiena" )
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", sharedIn, interaction1 = "conflictSiena" )
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", cl.XWX, interaction1 = "conflictSiena" )
 
+myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", from, interaction1 = "allySiena" )
+myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", to, interaction1 = "allySiena" )
+myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", sharedIn, interaction1 = "allySiena" )
+myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", cl.XWX, interaction1 = "allySiena" )
+
 #myCoEvolutionEff <- includeInteraction(myCoEvolutionEff,effFrom, totSim, name = "depressionbeh", interaction1 = c("sex", "friendship" ) )
 myCoEvolutionEff
 
 myCoEvAlgorithm <- sienaAlgorithmCreate(projname = 'PleaseForTheLoveOfGodWork', seed =1568,
-                                        n3 = 500)
+                                        n3 = 300)
 GroupsModel <- sienaModelCreate(projname = 'PleaseForTheLoveOfGodWork')
 modelTEST <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvolutionEff,
                      useCluster=TRUE, nbrNodes=3)
