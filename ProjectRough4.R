@@ -15,7 +15,7 @@ AC <- read_csv("data/ACLED_Africa.csv")
 
 #Quick overview of the data
 class(AC)
-summary(AC)
+#summary(AC)
 
 #Add new columns to dataframe
 #Gives each event a unique event ID
@@ -314,16 +314,21 @@ create_matrices_3 <- function(year1, year2, year3){
   
   #Loop through and populate the matrix
   #Returns of list of combined matrices
-  adjMatrixList <- list()
+  duple <- list()
+  allyMatrixList <- list()
+  conflictMatrixList <- list()
   index <- 1
   for(year in years){
-    adjMatrix <- matrix(data = 0, nrow = length(totalNames), ncol = length(totalNames))
-    rownames(adjMatrix) <- totalNames
-    colnames(adjMatrix) <- totalNames
+    allyMatrix <- matrix(data = 0, nrow = length(totalNames), ncol = length(totalNames))
+    conflictMatrix <- matrix(data = 0, nrow = length(totalNames), ncol = length(totalNames))
+    rownames(allyMatrix) <- totalNames
+    colnames(allyMatrix) <- totalNames
+    rownames(conflictMatrix) <- totalNames
+    colnames(conflictMatrix) <- totalNames
     curGraph <- graphs[[index]]
     print(index)
     for (i in c(1:length(totalNames))){
-      #print(i)
+      print(i)
       for (j in c(1:length(totalNames))){
         xaxis <- totalNames[[i]]
         yaxis <- totalNames[[j]]
@@ -332,19 +337,22 @@ create_matrices_3 <- function(year1, year2, year3){
             edgeID <- get.edge.ids(curGraph, c(xaxis,yaxis), directed = FALSE)
             rel <- edge_attr(curGraph, "RELATION", index = edgeID)
             if(rel == "pos"){
-              adjMatrix[i,j] <- 1
+              allyMatrix[i,j] <- 1
             }
             else{
-              adjMatrix[i,j] <- -1
+              conflictMatrix[i,j] <- 1
             }
           }
         }
       }
     }
-    adjMatrixList[[index]] <- adjMatrix
+    allyMatrixList[[index]] <- allyMatrix
+    conflictMatrixList[[index]] <- conflictMatrix
     index <- index + 1
   }
-  return(adjMatrixList)
+  duple[[1]] <- allyMatrixList
+  duple[[2]] <- conflictMatrixList
+  return(duple)
 }
 
 #Write the functions to make the relevant matrices
@@ -380,7 +388,7 @@ create_matrices_4 <- function(year1, year2, year3, year4){
     curGraph <- graphs[[index]]
     print(index)
     for (i in c(1:length(totalNames))){
-      #print(i)
+      print(i)
       for (j in c(1:length(totalNames))){
         xaxis <- totalNames[[i]]
         yaxis <- totalNames[[j]]
@@ -406,24 +414,7 @@ create_matrices_4 <- function(year1, year2, year3, year4){
 
 #Estimated run time: 2 minute per year
 #list2 <- create_matrices_2(1,2)
-#list3 <- create_matrices_3(1,2,3)
+list3 <- create_matrices_3(4,11,18)
 #list4 <- create_matrices_4(1,2,3,4)
 
-#Code for basic longitudinal analysis
-#
-longitudinal_analysis <- function(m1, m2){
-  #Make Graph for each time
-  #Need a scoring method for each tie
-  #Prediction for the next tie
-  #Regression based off of what variables?
-  
-}
 
-#Now that matrices are completed need to implement
-#Get function from authors
-
-#Ideas*********************************
-
-#Look at modularity between different types of groups
-#Burts constraint measure
-#constraint(testGraph)
