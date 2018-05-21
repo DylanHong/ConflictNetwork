@@ -162,7 +162,7 @@ len <- masterList[[3]]
 allySiena <- sienaDependent(array(c(allyt1, allyt2),
                                   dim=c(len, len, 2)))
 conflictSiena  <- sienaDependent(array(c(conflictt1 ,conflictt2),
-                                       dim=c(len, len, 2)))
+                                        dim=c(len, len, 2)))
 
 # Attributes:
 # sex          <- coCovar(vdb.attr[,1])

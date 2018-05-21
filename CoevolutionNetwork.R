@@ -6,8 +6,10 @@ library(igraph)
 #install.packages("tidyr")
 library(tidyr)
 library(dplyr)
-#install.packages("RSiena)
+#remove.packages("RSiena")
+#install.packages("RSiena")
 library(RSiena)
+
 
 
 #Read in the raw CSV
@@ -77,6 +79,7 @@ finalAC <- finalAC[ , !(names(finalAC) %in% drops)]
 df <- finalAC
 df <- df[,c(1,2,8,14)]
 df <- unique(df)
+df <- df[df$ACTOR1 != df$ACTOR2,]
 
 query_year <- function(df,y1,y2,y3,y4){
   tempdf <- df[df$YEAR == y1 | df$YEAR == y2 | df$YEAR == y3 | df$YEAR == y4,]
@@ -184,12 +187,12 @@ myCoEvolutionEff <- includeEffects(myCoEvolutionEff, transTrip,transTies, cycle3
 
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", from, interaction1 = "conflictSiena" )
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", to, interaction1 = "conflictSiena" )
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", sharedIn, interaction1 = "conflictSiena" )
+myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", sharedIn, interaction1 = "conflictSiena")
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", cl.XWX, interaction1 = "conflictSiena" )
 
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", from, interaction1 = "allySiena" )
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", to, interaction1 = "allySiena" )
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", sharedIn, interaction1 = "allySiena" )
+myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", sharedIn, interaction1 = "allySiena",type = "dyadic" )
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", cl.XWX, interaction1 = "allySiena" )
 
 #myCoEvolutionEff <- includeInteraction(myCoEvolutionEff,effFrom, totSim, name = "depressionbeh", interaction1 = c("sex", "friendship" ) )
