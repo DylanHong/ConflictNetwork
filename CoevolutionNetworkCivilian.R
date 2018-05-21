@@ -10,8 +10,6 @@ library(dplyr)
 #install.packages("RSiena")
 library(RSiena)
 
-
-
 #Read in the raw CSV
 AC <- read_csv("data/ACLED_Africa.csv")
 
@@ -68,7 +66,7 @@ for (i in c(11:16)){
 }
 
 #Drop columns that will not be used
-drops <- c("EVENT_DATE","TIME_PRECISION","EVENT_TYPE","REGION","ADMIN1",
+drops <- c("EVENT_DATE","TIME_PRECISION","REGION","ADMIN1",
            "ADMIN2","ADMIN3","LATITUDE","LONGITUDE","GEO_PRECISION","SOURCE",
            "SOURCE_SCALE","NOTES","TIMESTAMP")
 finalAC <- finalAC[ , !(names(finalAC) %in% drops)]
@@ -77,7 +75,8 @@ finalAC <- finalAC[ , !(names(finalAC) %in% drops)]
 #finalAC
 
 df <- finalAC
-df <- df[,c(1,2,8,14)]
+df <- df[,c(1,2,8,15,9)]
+df <- df[df$EVENT_TYPE == "Violence against civilians",]
 df <- unique(df)
 df <- df[df$ACTOR1 != df$ACTOR2,]
 
@@ -112,18 +111,33 @@ create_matrices_new <- function(df,y1,y2,y3,y4){
     colnames(conflictMatrix) <- namesList
     
     tempdf <- newdf[newdf$YEAR == year,]
+    print(nrow(tempdf))
     
     for (index in 1:nrow(tempdf)) { 
       x <- tempdf[index, ]
       name1 <- x[[1]]
       name2 <- x[[2]]
       if(x[[4]] == "pos"){
-        allyMatrix[name1,name2] <- 1
-        #allyMatrix[name2,name1] <- 1
+        if(grepl(name1,"Civilian")){
+          #allyMatrix[name1,name2] <- 1
+          allyMatrix[name2,name1] <- 1
+        }
+        else{
+          allyMatrix[name1,name2] <- 1
+          print(index)
+          print("pos")
+        }
       } 
       else{
-        conflictMatrix[name1,name2] <- 1
-        #conflictMatrix[name2,name1] <- 1
+        if(grepl(name1,"Civilian")){
+          #allyMatrix[name1,name2] <- 1
+          conflictMatrix[name2,name1] <- 1
+          print("here")
+        }
+        else{
+          conflictMatrix[name1,name2] <- 1
+          print(index)
+        }
       }
     }
     allyMatrixList[[counter]] <- allyMatrix
@@ -156,6 +170,11 @@ conflictt4 <- masterConflict[[4]]
 
 len <- masterList[[3]]
 
+randDF <- df[df$YEAR == "2006",]
+randGraph <- graph_from_data_frame(randDF)
+x11()
+plot.igraph(randGraph, vertex.size = 5, vertex.label = NA)
+
 # We do not use the "close friend" relation here, because there are
 # very few threshold crossings between values 1 and 2.
 # This can be checked by the print01Report for this relation.
@@ -167,9 +186,9 @@ len <- masterList[[3]]
 # is not very well determined by the data.)
 
 allySiena <- sienaDependent(array(c(allyt1, allyt2, allyt3, allyt4),
-        dim=c(len, len, 4)))
+                                  dim=c(len, len, 4)))
 conflictSiena  <- sienaDependent(array(c(conflictt1 ,conflictt2, conflictt3, conflictt4),
-        dim=c(len, len, 4)))
+                                       dim=c(len, len, 4)))
 
 # Attributes:
 # sex          <- coCovar(vdb.attr[,1])
@@ -182,18 +201,18 @@ vdb.ordered2345 <- sienaDataCreate(conflictSiena, allySiena)
 myCoEvolutionEff <- getEffects(vdb.ordered2345) 
 
 # network dynamic (inPopSqrt)
-myCoEvolutionEff <- includeEffects(myCoEvolutionEff, transTrip) 
+myCoEvolutionEff <- includeEffects(myCoEvolutionEff, transTrip,transTies) 
 #myCoEvolutionEff <- includeEffects(myCoEvolutionEff, name = "allySiena", egoX, altX, simX, interaction1="sex" )
 
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", from, interaction1 = "conflictSiena" )
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", to, interaction1 = "conflictSiena" )
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", sharedIn, interaction1 = "conflictSiena")
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", cl.XWX, interaction1 = "conflictSiena" )
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", from, interaction1 = "conflictSiena" )
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", to, interaction1 = "conflictSiena" )
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", sharedIn, interaction1 = "conflictSiena")
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", cl.XWX, interaction1 = "conflictSiena" )
 
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", from, interaction1 = "allySiena" )
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", to, interaction1 = "allySiena" )
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", sharedIn, interaction1 = "allySiena",type = "dyadic" )
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", cl.XWX, interaction1 = "allySiena" )
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", from, interaction1 = "allySiena" )
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", to, interaction1 = "allySiena" )
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", sharedIn, interaction1 = "allySiena")
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", cl.XWX, interaction1 = "allySiena" )
 
 #myCoEvolutionEff <- includeInteraction(myCoEvolutionEff,effFrom, totSim, name = "depressionbeh", interaction1 = c("sex", "friendship" ) )
 myCoEvolutionEff
