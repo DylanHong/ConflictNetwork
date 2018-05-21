@@ -78,8 +78,8 @@ df <- finalAC
 df <- df[,c(1,2,8,14)]
 df <- unique(df)
 
-query_year <- function(df,y1,y2,y3,y4){
-  tempdf <- df[df$YEAR == y1 | df$YEAR == y2 | df$YEAR == y3 | df$YEAR == y4,]
+query_year <- function(df,y1,y2){
+  tempdf <- df[df$YEAR == y1 | df$YEAR == y2,]
   return(tempdf)
 }
 
@@ -91,10 +91,10 @@ names_list <- function(df){
   return(totalNames)
 }
 
-create_matrices_new <- function(df,y1,y2,y3,y4){
-  years <- c(y1,y2,y3,y4)
+create_matrices_2 <- function(df,y1,y2){
+  years <- c(y1,y2)
   
-  newdf <- query_year(df,y1,y2,y3,y4)
+  newdf <- query_year(df,y1,y2)
   namesList <- names_list(newdf)
   
   allyMatrixList <- list()
@@ -136,20 +136,16 @@ create_matrices_new <- function(df,y1,y2,y3,y4){
   return(rand)
 }
 
-masterList <- create_matrices_new(df,2000,2002,2004,2008)
+masterList <- create_matrices_2(df,2006,2012)
 
 masterAlly <- masterList[[1]]
 masterConflict <- masterList[[2]]
 
 allyt1 <- masterAlly[[1]]
 allyt2 <- masterAlly[[2]]
-allyt3 <- masterAlly[[3]]
-allyt4 <- masterAlly[[4]]
 
 conflictt1 <- masterConflict[[1]]
 conflictt2 <- masterConflict[[2]]
-conflictt3 <- masterConflict[[3]]
-conflictt4 <- masterConflict[[4]]
 
 len <- masterList[[3]]
 
@@ -163,10 +159,10 @@ len <- masterList[[3]]
 # there is evidence for reciprocity, but the parameter estimate
 # is not very well determined by the data.)
 
-allySiena <- sienaDependent(array(c(allyt1, allyt2, allyt3, allyt4),
-        dim=c(len, len, 4)))
-conflictSiena  <- sienaDependent(array(c(conflictt1 ,conflictt2, conflictt3, conflictt4),
-        dim=c(len, len, 4)))
+allySiena <- sienaDependent(array(c(allyt1, allyt2),
+                                  dim=c(len, len, 2)))
+conflictSiena  <- sienaDependent(array(c(conflictt1 ,conflictt2),
+                                       dim=c(len, len, 2)))
 
 # Attributes:
 # sex          <- coCovar(vdb.attr[,1])
@@ -196,7 +192,7 @@ myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", cl
 myCoEvolutionEff
 
 myCoEvAlgorithm <- sienaAlgorithmCreate(projname = 'PleaseForTheLoveOfGodWork', seed =1568,
-                                        n3 = 500)
+                                        n3 = 300)
 GroupsModel <- sienaModelCreate(projname = 'PleaseForTheLoveOfGodWork')
 modelTEST <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvolutionEff,
                      useCluster=TRUE, nbrNodes=4)
