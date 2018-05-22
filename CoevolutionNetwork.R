@@ -118,8 +118,8 @@ create_matrices_new <- function(df,y1,y2,y3,y4){
       name1 <- x[[1]]
       name2 <- x[[2]]
       if(x[[4]] == "pos"){
-        allyMatrix[name1,name2] <- 1
-        #allyMatrix[name2,name1] <- 1
+        #allyMatrix[name1,name2] <- 1
+        allyMatrix[name2,name1] <- 1
       } 
       else{
         conflictMatrix[name1,name2] <- 1
@@ -139,7 +139,7 @@ create_matrices_new <- function(df,y1,y2,y3,y4){
   return(rand)
 }
 
-masterList <- create_matrices_new(df,2000,2002,2004,2008)
+masterList <- create_matrices_new(df,2011,2013,2015,2017)
 
 masterAlly <- masterList[[1]]
 masterConflict <- masterList[[2]]

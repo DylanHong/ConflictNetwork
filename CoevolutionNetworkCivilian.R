@@ -170,10 +170,10 @@ conflictt4 <- masterConflict[[4]]
 
 len <- masterList[[3]]
 
-randDF <- df[df$YEAR == "2006",]
-randGraph <- graph_from_data_frame(randDF)
-x11()
-plot.igraph(randGraph, vertex.size = 5, vertex.label = NA)
+# randDF <- df[df$YEAR == "2006",]
+# randGraph <- graph_from_data_frame(randDF)
+# x11()
+# plot.igraph(randGraph, vertex.size = 5, vertex.label = NA)
 
 # We do not use the "close friend" relation here, because there are
 # very few threshold crossings between values 1 and 2.
