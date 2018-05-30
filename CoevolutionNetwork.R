@@ -139,7 +139,7 @@ create_matrices_new <- function(df,y1,y2,y3,y4){
   return(rand)
 }
 
-masterList <- create_matrices_new(df,2011,2013,2015,2017)
+masterList <- create_matrices_new(df,1997,2000,2002,2004)
 
 masterAlly <- masterList[[1]]
 masterConflict <- masterList[[2]]
@@ -179,39 +179,46 @@ conflictSiena  <- sienaDependent(array(c(conflictt1 ,conflictt2, conflictt3, con
 # Data set and effects:
 vdb.ordered2345 <- sienaDataCreate(conflictSiena, allySiena)
 ##############
+
+print01Report(vdb.ordered2345, modelname = "CoevolveProj")
+
 myCoEvolutionEff <- getEffects(vdb.ordered2345) 
 
 # network dynamic (inPopSqrt)
 myCoEvolutionEff <- includeEffects(myCoEvolutionEff, transTrip) 
 #myCoEvolutionEff <- includeEffects(myCoEvolutionEff, name = "allySiena", egoX, altX, simX, interaction1="sex" )
 
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", from, interaction1 = "conflictSiena" )
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", to, interaction1 = "conflictSiena" )
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", sharedIn, interaction1 = "conflictSiena")
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", cl.XWX, interaction1 = "conflictSiena" )
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", from, interaction1 = "conflictSiena" )
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", to, interaction1 = "conflictSiena" )
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", sharedIn, interaction1 = "conflictSiena")
+#myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", cl.XWX, interaction1 = "conflictSiena" )
 
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", from, interaction1 = "allySiena" )
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", to, interaction1 = "allySiena" )
-myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", sharedIn, interaction1 = "allySiena",type = "dyadic" )
+myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", sharedIn, interaction1 = "allySiena")
 myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", cl.XWX, interaction1 = "allySiena" )
 
 #myCoEvolutionEff <- includeInteraction(myCoEvolutionEff,effFrom, totSim, name = "depressionbeh", interaction1 = c("sex", "friendship" ) )
 myCoEvolutionEff
 
-myCoEvAlgorithm <- sienaAlgorithmCreate(projname = 'PleaseForTheLoveOfGodWork', seed =1568,
+myCoEvAlgorithm <- sienaAlgorithmCreate(projname = 'Coevoproj2', seed =999,
                                         n3 = 300)
-GroupsModel <- sienaModelCreate(projname = 'PleaseForTheLoveOfGodWork')
+GroupsModel <- sienaModelCreate(projname = 'Coevoproj2')
 modelTEST <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvolutionEff,
                      useCluster=TRUE, nbrNodes=4)
-summary(modelTEST)
+
+modelTESTNEW <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvolutionEff,
+                     useCluster=TRUE, nbrNodes=5)
+
+summary(modelTESTNEW)
 
 modelTEST2 <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvolutionEff, 
                       prevAns=modelTEST, returnDeps=T) # specify starting values, return simulated nets (for GOF)
 myResults2  # examine results
 
-parameter <- modelTEST$effects$effectName
-estimate <- modelTEST $theta
-st.error <- sqrt(diag(modelTEST $covtheta))
+parameter <- modelTESTNEW$effects$effectName
+estimate <- modelTESTNEW$theta
+st.error <- sqrt(diag(modelTESTNEW$covtheta))
 normal.variate <- estimate/st.error
 
 p.value.2sided <- 2*pnorm(abs(normal.variate),lower.tail=FALSE)
@@ -222,4 +229,17 @@ data.frame(parameter,
            normal.variate=round(normal.variate,2),
            p.value=round(p.value.2sided,4)
 )
+
+
+# goodness of fit
+gofi <- sienaGOF(modelTEST, IndegreeDistribution, verbose = FALSE,join = TRUE,
+                varName ="allySiena")
+x11()
+plot(gofi)
+
+gof.od <- sienaGOF(RSmod1, verbose=TRUE, varName="fr4wav", OutdegreeDistribution,join=T)
+plot(gof.od)
+
+
+
 #################
