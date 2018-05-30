@@ -10,8 +10,6 @@ library(dplyr)
 #install.packages("RSiena")
 library(RSiena)
 
-
-
 #Read in the raw CSV
 AC <- read_csv("data/ACLED_Africa.csv")
 
@@ -139,7 +137,7 @@ create_matrices_new <- function(df,y1,y2,y3,y4){
   return(rand)
 }
 
-masterList <- create_matrices_new(df,1997,2000,2002,2004)
+masterList <- create_matrices_new(df,2004,2006,2008,2010)
 
 masterAlly <- masterList[[1]]
 masterConflict <- masterList[[2]]
@@ -185,7 +183,10 @@ print01Report(vdb.ordered2345, modelname = "CoevolveProj")
 myCoEvolutionEff <- getEffects(vdb.ordered2345) 
 
 # network dynamic (inPopSqrt)
-myCoEvolutionEff <- includeEffects(myCoEvolutionEff, transTrip) 
+myCoEvolutionEff <- includeEffects(myCoEvolutionEff, transTrip, name = "allySiena")
+
+myCoEvolutionEff <- includeEffects(myCoEvolutionEff, inPopSqrt, name = "conflictSiena")
+
 #myCoEvolutionEff <- includeEffects(myCoEvolutionEff, name = "allySiena", egoX, altX, simX, interaction1="sex" )
 
 #myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "allySiena", from, interaction1 = "conflictSiena" )
@@ -202,13 +203,13 @@ myCoEvolutionEff <- includeEffects( myCoEvolutionEff, name = "conflictSiena", cl
 myCoEvolutionEff
 
 myCoEvAlgorithm <- sienaAlgorithmCreate(projname = 'Coevoproj2', seed =999,
-                                        n3 = 300)
+                                        n3 = 500)
 GroupsModel <- sienaModelCreate(projname = 'Coevoproj2')
 modelTEST <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvolutionEff,
                      useCluster=TRUE, nbrNodes=4)
 
-modelTESTNEW <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvolutionEff,
-                     useCluster=TRUE, nbrNodes=5)
+#modelTESTNEW <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvolutionEff,
+                     #useCluster=TRUE, nbrNodes=5)
 
 summary(modelTESTNEW)
 
@@ -216,9 +217,9 @@ modelTEST2 <- siena07(myCoEvAlgorithm, data = vdb.ordered2345, effects = myCoEvo
                       prevAns=modelTEST, returnDeps=T) # specify starting values, return simulated nets (for GOF)
 myResults2  # examine results
 
-parameter <- modelTESTNEW$effects$effectName
-estimate <- modelTESTNEW$theta
-st.error <- sqrt(diag(modelTESTNEW$covtheta))
+parameter <- modelTEST$effects$effectName
+estimate <- modelTEST$theta
+st.error <- sqrt(diag(modelTEST$covtheta))
 normal.variate <- estimate/st.error
 
 p.value.2sided <- 2*pnorm(abs(normal.variate),lower.tail=FALSE)
@@ -239,7 +240,6 @@ plot(gofi)
 
 gof.od <- sienaGOF(RSmod1, verbose=TRUE, varName="fr4wav", OutdegreeDistribution,join=T)
 plot(gof.od)
-
 
 
 #################
