@@ -154,7 +154,7 @@ create_matrices_new <- function(df,y1,y2,y3,y4){
 }
 
 #Create matrices for the given year
-masterList <- create_matrices_new(df,2004,2006,2008,2010)
+masterList <- create_matrices_new(df,2002,2004,2006,2008)
 
 masterAlly <- masterList[[1]]
 masterConflict <- masterList[[2]]
@@ -208,14 +208,14 @@ coevoEffects <- includeEffects( coevoEffects, name = "conflictSiena", cl.XWX, in
 coevoEffects
 
 #Create algorithm
-myCoEvAlgorithm <- sienaAlgorithmCreate(projname = 'coevoProject2', seed =999, n3 = 500)
+coevoAlgorithm <- sienaAlgorithmCreate(projname = 'coevoProject2', seed =123, n3 = 500)
 
 #Save Model
 GroupsModel <- sienaModelCreate(projname = 'coevoProject2')
 
 #Run the Siena Model
-coevoModel <- siena07(myCoEvAlgorithm, data = coevoData, effects = coevoEffects, 
-                     useCluster=TRUE, nbrNodes=4)
+coevoModel <- siena07(coevoAlgorithm, data = coevoData, effects = coevoEffects, 
+                     useCluster=TRUE, nbrNodes=6)
 summary(coevoModel)
 
 #Second Model if needed with specific starting values
@@ -238,18 +238,3 @@ data.frame(parameter,
            p.value=round(p.value.2sided,4)
 )
 
-
-
-
-
-# goodness of fit
-gofi <- sienaGOF(modelTEST, IndegreeDistribution, verbose = FALSE,join = TRUE,
-                 varName ="allySiena")
-x11()
-plot(gofi)
-
-gof.od <- sienaGOF(RSmod1, verbose=TRUE, varName="fr4wav", OutdegreeDistribution,join=T)
-plot(gof.od)
-
-
-#################
